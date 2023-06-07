@@ -3,7 +3,6 @@
 #include <iomanip>
 #include <vector>
 
-// The class that stores data
 class Student {
     int rollNo;
     char name[50];
@@ -11,11 +10,14 @@ class Student {
     int* marks;      // Dynamic array to store marks for each subject
     double average;
     char grade;
+    int* credits;
+    double GPA;
+    std::string convertGPA;
 
 public:
     void getData();
     void showData() const;
-    void calculate();
+    void calculate(int credits[4]);
     int getRollNo() const;
     void updateData();
     void calculateGrade();
@@ -24,55 +26,19 @@ public:
     char getGrade() const; // Function to retrieve the grade
 };
 
+//Function to get grade
 char Student::getGrade() const {
     return grade;
 }
 
+//Function to create Dat file
 
+//Function to get Average
 double Student::getAverage() const {
     return average;
 }
 
-void displayHighestAverage(const std::vector<Student>& students) {
-    if (students.empty()) {
-        std::cout << "No student records available." << std::endl;
-        return;
-    }
-
-    double highestAverage = students[0].getAverage();
-    for (const auto& student : students) {
-        if (student.getAverage() > highestAverage) {
-            highestAverage = student.getAverage();
-        }
-    }
-
-    std::cout << "Highest Average Score: " << highestAverage << std::endl;
-}
-
-void displayLowestAverage(const std::vector<Student>& students) {
-    if (students.empty()) {
-        std::cout << "No student records available." << std::endl;
-        return;
-    }
-
-    double lowestAverage = students[0].getAverage();
-    for (const auto& student : students) {
-        if (student.getAverage() < lowestAverage) {
-            lowestAverage = student.getAverage();
-        }
-    }
-
-    std::cout << "Lowest Average Score: " << lowestAverage << std::endl;
-}
-
-void Student::calculate() {
-    int totalMarks = 0;
-    for (int i = 0; i < numSubjects; i++) {
-        totalMarks += marks[i];
-    }
-    average = static_cast<double>(totalMarks) / numSubjects;
-    calculateGrade();
-}
+//Function for case 1
 
 void Student::getData() {
     std::cout << "\nEnter student details:" << std::endl;
@@ -87,280 +53,148 @@ void Student::getData() {
 
     marks = new int[numSubjects];
 
-    std::cout << "Enter marks for Math: ";
+    std::cout << "Enter marks for Linear Algebra: ";
     std::cin >> marks[0];
 
-    std::cout << "Enter marks for Science: ";
+
+    std::cout << "Enter marks for Computer System Programing: ";
     std::cin >> marks[1];
+
 
     std::cout << "Enter marks for Physics: ";
     std::cin >> marks[2];
 
+
     std::cout << "Enter marks for Chemistry: ";
     std::cin >> marks[3];
-
-    calculate();
 }
 
-void Student::showData() const {
-    std::cout << "\nRoll number: " << rollNo << std::endl;
-    std::cout << "Name: " << name << std::endl;
-    std::cout << "Number of subjects: " << numSubjects << std::endl;
-    std::cout << "Marks for each subject:";
-    for (int i = 0; i < numSubjects; i++) {
-        std::cout << " " << marks[i];
+//Function to calculate GPA
+
+void Student::calculate(int credits[4])
+{
+    double totalMarks = 0;
+    int totalCredits = 0;
+    for (int i = 0; i < numSubjects; i++)
+    {
+        if (marks[i] >= 89.5){
+            totalMarks += 4.0 * credits[i];
+            totalCredits += credits[i];
+        }
+        else if (marks[i] >= 84.5){
+            totalMarks += 3.7 * credits[i];
+            totalCredits += credits[i];
+        }
+            
+        else if (marks[i] >= 79.5){
+            totalMarks += 3.3 * credits[i];
+            totalCredits += credits[i];
+        }
+        else if (marks[i] >= 74.5){
+            totalMarks += 3.0 * credits[i];
+            totalCredits += credits[i];
+        }
+        else if (marks[i] >= 69.5){
+            totalMarks += 2.7 * credits[i];
+            totalCredits += credits[i];
+        }
+        else if (marks[i] >= 64.5){
+            totalMarks += 2.3 * credits[i];
+            totalCredits += credits[i];
+        }
+        else if (marks[i] >= 59.5){
+            totalMarks += 2.0 * credits[i];
+            totalCredits += credits[i];
+        }
+        else if (marks[i] >= 54.5){
+            totalMarks += 1.7 * credits[i];
+            totalCredits += credits[i];
+        }
+        else if (marks[i] >= 49.5){
+            totalMarks += 1.3 * credits[i];
+            totalCredits += credits[i];
+        }
+        else if (marks[i] >= 44.5){
+            totalMarks += 1.0 * credits[i];
+            totalCredits += credits[i];
+        }
+        else if (marks[i] >= 40){
+            totalMarks += 0.7 * credits[i];
+            totalCredits += credits[i];
+        }
+        else{
+            totalMarks += 0.0 * credits[i];
+            totalCredits += credits[i];
+        }
+            
     }
-    std::cout << std::endl;
-    std::cout << "Average marks: " << average << std::endl;
-    std::cout << "Grade: " << grade << std::endl;
+    std::cout << totalMarks << std::endl;
+    std::cout << totalCredits << std::endl;
+    GPA = static_cast<double>(totalMarks) / totalCredits;
 }
 
-int Student::getRollNo() const {
-    return rollNo;
-}
-
-void Student::updateData() {
-    std::cout << "\nEnter updated student details:" << std::endl;
-    std::cout << "Name: ";
-    std::cin.ignore();
-    std::cin.getline(name, 50);
-
-    numSubjects = 4; // Update the number of subjects to 4
-
-    delete[] marks; // Free the memory of the previous marks array
-    marks = new int[numSubjects];
-
-    std::cout << "Enter marks for Math: ";
-    std::cin >> marks[0];
-
-    std::cout << "Enter marks for Science: ";
-    std::cin >> marks[1];
-
-    std::cout << "Enter marks for Physics: ";
-    std::cin >> marks[2];
-
-    std::cout << "Enter marks for Chemistry: ";
-    std::cin >> marks[3];
-
-    calculate();
-}
-
-void Student::calculateGrade() {
-    if (average >= 90)
-        grade = 'A';
-    else if (average >= 80)
-        grade = 'B';
-    else if (average >= 70)
-        grade = 'C';
-    else if (average >= 60)
-        grade = 'D';
-    else
-        grade = 'F';
-}
-
-void Student::displayDetails() const {
+void Student::displayDetails() const
+{
     std::cout << std::setw(10) << rollNo;
     std::cout << std::setw(20) << name;
-    for (int i = 0; i < numSubjects; i++) {
-        std::cout << std::setw(10) << marks[i];
+    for (int i = 0; i < numSubjects; i++)
+    {
+        std::string convertGPA;
+        if (marks[i] >=89.5)
+            convertGPA = "A";
+        else if (marks[i] >= 84.5)
+            convertGPA = "A-";
+        else if (marks[i] >= 79.5)
+            convertGPA = "B+";
+        else if (marks[i] >= 74.5)
+            convertGPA = "B";
+        else if (marks[i] >= 69.5)
+            convertGPA = "B-";
+        else if (marks[i] >= 64.5)
+            convertGPA = "C+";
+        else if (marks[i] >= 59.5)
+            convertGPA = "C";
+        else if (marks[i] >= 54.5)
+            convertGPA = "C-";
+        else if (marks[i] >= 49.5)
+            convertGPA = "D+";
+        else if (marks[i] >= 44.5)
+            convertGPA = "D";
+        else if (marks[i] >= 40)
+            convertGPA = "D-";
+        else 
+            convertGPA = "F";
+
+
+        std::cout << std::setw(10) << convertGPA;
     }
-    std::cout << std::setw(10) << average;
-    std::cout << std::setw(10) << grade << std::endl;
+    std::cout << std::setw(10) << GPA << std::endl;
 }
-
-// Function to create a new student record
-void createStudent() {
-    Student stud;
-    std::ofstream outFile("student.dat", std::ios::binary | std::ios::app);
-    stud.getData();
-    outFile.write(reinterpret_cast<const char*>(&stud), sizeof(Student));
-    outFile.close();
-    std::cout << "\n\nStudent record has been created";
-    std::cin.ignore();
-    std::cin.get();
-}
-
-// Function to display a specific student record
-void displayStudent(int n) {
-    Student stud;
-    std::ifstream inFile("student.dat", std::ios::binary);
-    if (!inFile) {
-        std::cout << "File could not be opened... Press any key to exit";
-        std::cin.ignore();
-        std::cin.get();
-        return;
-    }
-    bool found = false;
-    while (inFile.read(reinterpret_cast<char*>(&stud), sizeof(Student))) {
-        if (stud.getRollNo() == n) {
-            stud.showData();
-            found = true;
-        }
-    }
-    inFile.close();
-    if (!found)
-        std::cout << "\n\nRecord does not exist";
-    std::cin.ignore();
-    std::cin.get();
-}
-
-// Function to display all student records
-void displayAllStudents() {
-    Student stud;
-    std::ifstream inFile("student.dat", std::ios::binary);
-    if (!inFile) {
-        std::cout << "File could not be opened! Press any key to exit";
-        std::cin.ignore();
-        std::cin.get();
-        return;
-    }
-    std::cout << "\n\n\n\t\tDISPLAYING ALL RECORDS\n\n";
-    while (inFile.read(reinterpret_cast<char*>(&stud), sizeof(Student))) {
-        stud.showData();
-        std::cout << "\n\n====================================\n";
-    }
-    inFile.close();
-    std::cin.ignore();
-    std::cin.get();
-}
-
-// Function to update a specific student record
-void updateStudent(int n) {
-    bool found = false;
-    Student stud;
-    std::fstream file("student.dat", std::ios::binary | std::ios::in | std::ios::out);
-    if (!file) {
-        std::cout << "File could not be opened. Press any key to exit...";
-        std::cin.ignore();
-        std::cin.get();
-        return;
-    }
-    while (!file.eof() && !found) {
-        file.read(reinterpret_cast<char*>(&stud), sizeof(Student));
-        if (stud.getRollNo() == n) {
-            stud.showData();
-            std::cout << "\nEnter new student details:" << std::endl;
-            stud.updateData();
-            int pos = (-1) * static_cast<int>(sizeof(stud));
-            file.seekp(pos, std::ios::cur);
-            file.write(reinterpret_cast<const char*>(&stud), sizeof(Student));
-            std::cout << "\n\n\tRecord Updated";
-            found = true;
-        }
-    }
-    file.close();
-    if (!found)
-        std::cout << "\n\nRecord Not Found";
-    std::cin.ignore();
-    std::cin.get();
-}
-
-// Function to delete a specific student record
-void deleteStudent(int n) {
-    Student stud;
-    std::ifstream inFile("student.dat", std::ios::binary);
-    if (!inFile) {
-        std::cout << "File could not be opened... Press any key to exit";
-        std::cin.ignore();
-        std::cin.get();
-        return;
-    }
-    std::ofstream outFile("Temp.dat", std::ios::binary);
-    inFile.seekg(0, std::ios::beg);
-    while (inFile.read(reinterpret_cast<char*>(&stud), sizeof(Student))) {
-        if (stud.getRollNo() != n) {
-            outFile.write(reinterpret_cast<const char*>(&stud), sizeof(Student));
-        }
-    }
-    outFile.close();
-    inFile.close();
-    remove("student.dat");
-    rename("Temp.dat", "student.dat");
-    std::cout << "\n\n\tRecord Deleted...";
-    std::cin.ignore();
-    std::cin.get();
-}
-
-// Function to generate a student report
-void generateReport() {
-    Student stud;
-    std::ifstream inFile("student.dat", std::ios::binary);
-    if (!inFile) {
-        std::cout << "File could not be opened... Press any key to exit";
-        std::cin.ignore();
-        std::cin.get();
-        return;
-    }
-    std::cout << "\n\n\t\t\tSTUDENT REPORT\n\n";
-    std::cout << "=============================================================\n";
-    std::cout << std::setw(10) << "Roll No.";
-    std::cout << std::setw(20) << "Name";
-    std::cout << std::setw(10) << "Math";
-    std::cout << std::setw(10) << "Science";
-    std::cout << std::setw(10) << "Physics";
-    std::cout << std::setw(10) << "Chemistry";
-    std::cout << std::setw(10) << "Average";
-    std::cout << std::setw(10) << "Grade";
-    std::cout << "\n=============================================================\n";
-
-    while (inFile.read(reinterpret_cast<char*>(&stud), sizeof(Student))) {
-        stud.displayDetails();
-    }
-    inFile.close();
-    std::cin.ignore();
-    std::cin.get();
-}
-
-
-#include <iostream>
-#include <fstream>
-#include <vector>
-
-void plotGradeData(const std::vector<Student>& students) {
-    if (students.empty()) {
-        std::cout << "No student records available." << std::endl;
-        return;
-    }
-
-    // Prepare the data for plotting
-    std::vector<double> averages;
-    std::vector<char> grades;
-    for (const auto& student : students) {
-        averages.push_back(student.getAverage());
-        grades.push_back(student.getGrade());
-    }
-
-    // Plotting code using Python
-    std::ofstream plotFile("plot.py");
-    plotFile << "import matplotlib.pyplot as plt\n";
-    plotFile << "averages = [";
-    for (const auto& average : averages) {
-        plotFile << average << ", ";
-    }
-    plotFile << "]\n";
-
-    plotFile << "grades = [";
-    for (const auto& grade : grades) {
-        plotFile << "'" << grade << "', ";
-    }
-    plotFile << "]\n";
-
-    plotFile << "plt.bar(grades, averages)\n";
-    plotFile << "plt.xlabel('Grade')\n";
-    plotFile << "plt.ylabel('Average')\n";
-    plotFile << "plt.title('Grade Distribution')\n";
-    plotFile << "plt.show()\n";
-    plotFile.close();
-
-    // Execute the Python script
-    system("python plot.py");
-
-    std::cout << "Grade distribution plotted successfully." << std::endl;
-}
-
 
 int main() {
-    std::vector<Student> students; // Store student objects in a vector
+    std::vector<Student> students;
+    std::cout << "Welcome to SPRING 2023 course of Vinuni" << std::endl;
+    std::cout << "This semester including 4 course:" << std::endl;
+    std::cout << "1. Linear Algebra:" << std::endl;
+    std::cout << "2. Computer System Program" << std::endl;
+    std::cout << "3. Physics" << std::endl;
+    std::cout << "4. Chemistry" << std::endl;
+    std::cout << " \n Please provide the credits number for each course" << std::endl;
+    
+    int* credits;
+    credits = new int[4];
+
+    std::cout << "Enter credits for Linear Algebra: ";
+    std::cin >> credits[0];
+
+    std::cout << "Enter credits for Computer System Programing: ";
+    std::cin >> credits[1];
+
+    std::cout << "Enter credits for Physics: ";
+    std::cin >> credits[2];
+
+    std::cout << "Enter credits for Chemistry: ";
+    std::cin >> credits[3];
 
     int choice;
     while (true) {
@@ -376,62 +210,33 @@ int main() {
         std::cin >> choice;
 
         switch (choice) {
-            case 1: {
+            case 1:{
                 Student newStudent;
                 newStudent.getData();
+                newStudent.calculate(credits);
                 students.push_back(newStudent);
                 break;
             }
-            case 2: {
-                if (students.empty()) {
+            
+            case 2:{
+                if (students.empty()){
                     std::cout << "No student records available." << std::endl;
-                } else {
+                }
+                else {
                     std::cout << std::setw(10) << "Roll No";
                     std::cout << std::setw(20) << "Name";
                     std::cout << std::setw(10) << "Math";
                     std::cout << std::setw(10) << "Science";
                     std::cout << std::setw(10) << "Physics";
                     std::cout << std::setw(10) << "Chemistry";
-                    std::cout << std::setw(10) << "Average";
-                    std::cout << std::setw(10) << "Grade" << std::endl;
-                    for (const auto& student : students) {
+                    std::cout << std::setw(10) << "GPA" << std::endl; 
+                for (const auto& student : students) {
                         student.displayDetails();
                     }
-                }
                 break;
             }
-            case 3:
-                displayHighestAverage(students);
-                break;
-             case 4:
-                displayLowestAverage(students);
-                break;
-            case 5: {
-                int rollNo;
-                std::cout << "Enter the roll number of the student to update: ";
-                std::cin >> rollNo;
-                bool found = false;
-                for (auto& student : students) {
-                    if (student.getRollNo() == rollNo) {
-                        student.updateData();
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    std::cout << "Student with roll number " << rollNo << " not found." << std::endl;
-                }
-                break;
-            }
-            case 6:
-                plotGradeData(students);
-                break;
-            case 7: {
-                std::cout << "Exiting the program..." << std::endl;
-                return 0;
-            }
-            default:
-                std::cout << "Invalid choice. Please enter a number between 1 and 6." << std::endl;
         }
     }
 }
+}
+   
